@@ -20,12 +20,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Pedagogical SAST Profile PSP
         uses: research-projects-all/Pedagogical-SAST-Profile-PSP@v2.0.0
         with:
-          framework: auto
+          framework: python
           scan-path: .
           output-format: sarif
           output-file: psp-results.sarif
