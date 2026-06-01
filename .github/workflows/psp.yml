@@ -1,4 +1,4 @@
-name: PSP Pedagogical Security Scan
+name: Semgrep Security Scan
 
 on:
   push:
@@ -7,24 +7,34 @@ on:
     branches: [main, master]
 
 jobs:
-  psp:
-    name: Run Pedagogical SAST Profile
+  semgrep:
+    name: Run Semgrep
     runs-on: ubuntu-latest
-    
-    # REQUIRED: Allows the action to upload SARIF to GitHub Code Scanning
+
     permissions:
       contents: read
       security-events: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Pedagogical SAST Profile (PSP)
-        uses: research-projects-all/Pedagogical-SAST-Profile-PSP@v2.0.0
+      - name: Install Semgrep
+        run: python -m pip install semgrep
+
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config p/python \
+            --sarif \
+            --output psp-results.sarif \
+            --exclude .venv \
+            --exclude venv \
+            --exclude __pycache__ \
+            .
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v4
+        if: always() && hashFiles('psp-results.sarif') != ''
         with:
-          framework: auto        # Detects Java→Spring, Python→Django automatically
-          scan-path: .           # Scan entire repo (change to ./src if needed)
-          output-format: sarif   # Required for GitHub Security tab integration
-          output-file: psp-results.sarif
-          fail-on-finding: false # Set to 'true' to block PRs on ERROR severity
+          sarif_file: psp-results.sarif
