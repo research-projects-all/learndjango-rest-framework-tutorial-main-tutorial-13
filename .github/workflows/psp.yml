@@ -33,9 +33,9 @@ jobs:
             | sort
 
       - name: Pedagogical SAST Profile PSP
-        uses: research-projects-all/Pedagogical-SAST-Profile-PSP@main
+        uses: research-projects-all/Pedagogical-SAST-Profile-PSP@v2.0.0
         with:
-          framework: python
+          framework: django
           scan-path: .
           output-format: sarif
           output-file: psp-results.sarif
