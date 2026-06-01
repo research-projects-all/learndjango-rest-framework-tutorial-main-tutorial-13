@@ -19,12 +19,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show Python files
+      - name: Confirm Python files exist
         run: |
-          find . -name "*.py" -not -path "./.venv/*" -not -path "./venv/*" | sort
+          echo "Repository root:"
+          pwd
+
+          echo "Python files found:"
+          find . -name "*.py" \
+            -not -path "./.venv/*" \
+            -not -path "./venv/*" \
+            -not -path "./env/*" \
+            -not -path "./__pycache__/*" \
+            | sort
 
       - name: Pedagogical SAST Profile PSP
-        uses: research-projects-all/Pedagogical-SAST-Profile-PSP@v2.0.0
+        uses: research-projects-all/Pedagogical-SAST-Profile-PSP@main
         with:
           framework: python
           scan-path: .
